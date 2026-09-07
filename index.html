@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">R Regression to LaTeX Converter</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+  </head>
+  <body
+    class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white"
+  >
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 py-5 px-8 shadow-md">
+      <div class="max-w-4xl mx-auto flex justify-between items-center">
+        <div>
+          <h1
+            id="headerTitle"
+            class="text-xl md:text-2xl font-bold text-slate-100"
+          >
+            R Regression to LaTeX Converter
+          </h1>
+          <p id="headerSubtitle" class="text-xs md:text-sm text-slate-400 mt-1">
+            Paste your R `summary(lm())` output below to instantly generate a
+            publication-ready booktabs LaTeX table.
+          </p>
+        </div>
+        <!-- Language Switcher -->
+        <div
+          class="flex items-center space-x-2 bg-slate-800 p-1 rounded-lg border border-slate-700"
+        >
+          <button
+            onclick="setLanguage('en')"
+            id="langEnBtn"
+            class="px-3 py-1 text-xs font-semibold rounded-md bg-blue-600 text-white transition"
+          >
+            EN
+          </button>
+          <button
+            onclick="setLanguage('pt')"
+            id="langPtBtn"
+            class="px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition"
+          >
+            PT
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main
+      class="max-w-4xl mx-auto w-full p-6 flex-grow grid grid-cols-1 md:grid-cols-2 gap-6 my-6"
+    >
+      <!-- Input Section -->
+      <div class="flex flex-col">
+        <label
+          for="rInput"
+          id="labelStep1"
+          class="font-semibold text-sm mb-2 text-slate-300"
+          >1. Paste R Console Output:</label
+        >
+        <textarea
+          id="rInput"
+          rows="12"
+          class="w-full p-4 border border-slate-700 rounded-lg font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-900 text-slate-200 placeholder-slate-600 shadow-inner"
+          placeholder="Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  2.34560    0.45120   5.198 1.23e-06 ***
+age          0.81230    0.12450   6.524 4.56e-09 ***"
+        ></textarea>
+        <button
+          onclick="handleConversion()"
+          id="btnGenerate"
+          class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition shadow"
+        >
+          Generate LaTeX Table
+        </button>
+      </div>
+
+      <!-- Output Section -->
+      <div class="flex flex-col">
+        <div class="flex justify-between items-center mb-2">
+          <label id="labelStep2" class="font-semibold text-sm text-slate-300"
+            >2. Generated LaTeX Code:</label
+          >
+          <button
+            onclick="copyToClipboard()"
+            id="copyBtn"
+            class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-1 rounded text-slate-300 transition"
+          >
+            Copy Code
+          </button>
+        </div>
+        <pre
+          class="w-full h-[270px] p-4 bg-slate-900 border border-slate-800 text-emerald-400 rounded-lg font-mono text-xs overflow-auto shadow-inner"
+        ><code id="latexOutput">% Your LaTeX code will appear here...</code></pre>
+      </div>
+    </main>
+
+    <!-- Ad Placeholder (For future Google AdSense) -->
+    <div class="max-w-4xl mx-auto w-full px-6 mb-6">
+      <div
+        id="adText"
+        class="border border-dashed border-slate-800 rounded-lg p-4 text-center text-slate-500 text-xs bg-slate-900/50"
+      >
+        Advertisement Space (Ready for Google AdSense)
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500"
+    >
+      <span id="footerText"
+        >&copy; 2026 Academic LaTeX Utilities. Built for researchers.</span
+      >
+    </footer>
+
+    <!-- Localization and Logic Script -->
+    <script>
+      const translations = {
+        en: {
+          pageTitle: "R Regression to LaTeX Converter",
+          headerTitle: "R Regression to LaTeX Converter",
+          headerSubtitle:
+            "Paste your R `summary(lm())` output below to instantly generate a publication-ready booktabs LaTeX table.",
+          labelStep1: "1. Paste R Console Output:",
+          btnGenerate: "Generate LaTeX Table",
+          labelStep2: "2. Generated LaTeX Code:",
+          copyBtn: "Copy Code",
+          copied: "Copied!",
+          adText: "Advertisement Space (Ready for Google AdSense)",
+          footerText: "© 2026 Academic LaTeX Utilities. Built for researchers.",
+          errorParse:
+            "% Error: Could not parse coefficients. Please check your input format.",
+          caption: "Regression Analysis Results",
+        },
+        pt: {
+          pageTitle: "Conversor de Regressão R para Tabela LaTeX",
+          headerTitle: "Conversor de Regressão R para Tabela LaTeX",
+          headerSubtitle:
+            "Cole a saída do seu `summary(lm())` do R abaixo para gerar instantaneamente uma tabela LaTeX pronta para publicação.",
+          labelStep1: "1. Cole a Saída do Console R:",
+          btnGenerate: "Gerar Tabela LaTeX",
+          labelStep2: "2. Código LaTeX Gerado:",
+          copyBtn: "Copiar Código",
+          copied: "Copiado!",
+          adText: "Espaço para Anúncio (Pronto para Google AdSense)",
+          footerText:
+            "© 2026 Academic LaTeX Utilities. Desenvolvido para pesquisadores.",
+          errorParse:
+            "% Erro: Não foi possível interpretar os coeficientes. Verifique o formato de entrada.",
+          caption: "Resultados da Análise de Regressão",
+        },
+      };
+
+      let currentLang = "en";
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        const t = translations[lang];
+
+        document.getElementById("pageTitle").innerText = t.pageTitle;
+        document.getElementById("headerTitle").innerText = t.headerTitle;
+        document.getElementById("headerSubtitle").innerText = t.headerSubtitle;
+        document.getElementById("labelStep1").innerText = t.labelStep1;
+        document.getElementById("btnGenerate").innerText = t.btnGenerate;
+        document.getElementById("labelStep2").innerText = t.labelStep2;
+        document.getElementById("copyBtn").innerText = t.copyBtn;
+        document.getElementById("adText").innerText = t.adText;
+        document.getElementById("footerText").innerText = t.footerText;
+
+        // Toggle button styles
+        if (lang === "en") {
+          document.getElementById("langEnBtn").className =
+            "px-3 py-1 text-xs font-semibold rounded-md bg-blue-600 text-white transition";
+          document.getElementById("langPtBtn").className =
+            "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
+        } else {
+          document.getElementById("langPtBtn").className =
+            "px-3 py-1 text-xs font-semibold rounded-md bg-blue-600 text-white transition";
+          document.getElementById("langEnBtn").className =
+            "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
+        }
+      }
+
+      function convertRegressionToLatex(rawText) {
+        const lines = rawText.trim().split("\n");
+        let coefficientSection = false;
+        const coefficients = [];
+
+        for (let line of lines) {
+          if (line.includes("Coefficients:")) {
+            coefficientSection = true;
+            continue;
+          }
+          if (coefficientSection && line.trim() === "") {
+            break;
+          }
+
+          if (coefficientSection && !line.includes("Estimate")) {
+            const regex =
+              /^([^\s]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.eE+-]+)/;
+            const match = line.trim().match(regex);
+
+            if (match) {
+              const [, name, estimate, stdError, tValue, pValue] = match;
+
+              let stars = "";
+              const p = parseFloat(pValue);
+              if (p < 0.001) stars = "***";
+              else if (p < 0.01) stars = "**";
+              else if (p < 0.05) stars = "*";
+
+              coefficients.push({
+                name: name.replace(/[_]/g, "\\_"),
+                estimate: parseFloat(estimate).toFixed(3),
+                stdError: parseFloat(stdError).toFixed(3),
+                tValue: parseFloat(tValue).toFixed(3),
+                pValue: p < 0.001 ? "< 0.001" : p.toFixed(3),
+                stars: stars,
+              });
+            }
+          }
+        }
+
+        if (coefficients.length === 0) {
+          return translations[currentLang].errorParse;
+        }
+
+        return generateLatexTemplate(coefficients);
+      }
+
+      function generateLatexTemplate(coefficients) {
+        const captionText = translations[currentLang].caption;
+        let latex = "\\begin{table}[htbp]\n";
+        latex += "  \\centering\n";
+        latex += `  \\caption{${captionText}}\n`;
+        latex += "  \\begin{tabular}{lcccc}\n";
+        latex += "    \\toprule\n";
+        latex +=
+          "    Variable & Estimate & Std. Error & t value & Pr(>|t|) \\\\\n";
+        latex += "    \\midrule\n";
+
+        for (let row of coefficients) {
+          latex += `    ${row.name} & ${row.estimate} & ${row.stdError} & ${row.tValue} & ${row.pValue} ${row.stars} \\\\\n`;
+        }
+
+        latex += "    \\bottomrule\n";
+        latex += "  \\end{tabular}\n";
+        latex += "  \\label{tab:regression_results}\n";
+        latex += "\\end{table}";
+
+        return latex;
+      }
+
+      function handleConversion() {
+        const input = document.getElementById("rInput").value;
+        const output = convertRegressionToLatex(input);
+        document.getElementById("latexOutput").innerText = output;
+      }
+
+      function copyToClipboard() {
+        const text = document.getElementById("latexOutput").innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById("copyBtn");
+          const originalText = t.copyBtn;
+          btn.innerText = translations[currentLang].copied;
+          setTimeout(
+            () => (btn.innerText = translations[currentLang].copyBtn),
+            2000,
+          );
+        });
+      }
+    </script>
+  </body>
+</html>
