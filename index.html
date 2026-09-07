@@ -26,7 +26,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
 
-    <!-- Sticky Header & Ecosystem Navigation Hub -->
+    <!-- Sticky Header -->
     <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 py-4 px-6 shadow-md">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
@@ -100,7 +100,7 @@
         <div id="sectionStats" class="hidden space-y-6">
             <div class="border-b border-slate-800 pb-4">
                 <h2 class="text-lg font-semibold text-slate-200">Statistic Wizard & Dataset Analyzer</h2>
-                <p class="text-xs text-slate-400">Upload your dataset (.xlsx / .csv) to calculate real results, generate APA tables, charts, and TCC reports.</p>
+                <p class="text-xs text-slate-400">Upload your dataset (.xlsx / .csv) to calculate results, generate APA tables, charts (with trendlines), and TCC reports.</p>
             </div>
 
             <!-- Dataset Upload Section -->
@@ -114,7 +114,7 @@
                 </div>
                 <div id="columnSelectors" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                     <div class="flex flex-col space-y-1">
-                        <label class="text-xs text-slate-300">Select Variable X (Group / Independent):</label>
+                        <label class="text-xs text-slate-300">Select Variable X (Independent / Group):</label>
                         <select id="colX" class="p-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-200"></select>
                     </div>
                     <div class="flex flex-col space-y-1">
@@ -138,15 +138,15 @@
                     <select id="statObjective" class="p-2.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="compare2">Compare 2 Groups / Samples</option>
                         <option value="compare3">Compare 3+ Groups / Samples</option>
-                        <option value="correlate">Correlate Variables</option>
+                        <option value="correlate" selected>Correlate Variables</option>
                         <option value="regression">Cause & Effect (Prediction)</option>
                     </select>
                 </div>
                 <div class="flex flex-col space-y-2">
                     <label class="font-semibold text-xs text-blue-400">Step 4: Pairing</label>
                     <select id="statPairing" class="p-2.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="unpaired">Unpaired (Independent Groups)</option>
-                        <option value="paired">Paired (Same group, 2 moments)</option>
+                        <option value="unpaired">Unpaired (Independent)</option>
+                        <option value="paired">Paired (Same group)</option>
                     </select>
                 </div>
             </div>
@@ -189,17 +189,17 @@
                 <!-- Export Container -->
                 <div id="outputExportContainer" class="space-y-6 bg-slate-950 p-4 rounded-xl border border-slate-800 transition">
                     <div class="flex flex-col items-center">
-                        <span id="chartTitleLabel" class="text-xs font-semibold text-slate-400 mb-2">Figure 1. Statistical Graph from Dataset</span>
+                        <span id="chartTitleLabel" class="text-xs font-semibold text-slate-400 mb-2">Figure 1. Statistical Graph</span>
                         <div class="w-full max-w-lg h-64">
                             <canvas id="statChart"></canvas>
                         </div>
                     </div>
                     <div class="overflow-x-auto pt-4 border-t border-slate-800" id="apaTableContainer">
-                        <p id="tableTitleLabel" class="text-xs font-semibold text-slate-400 mb-2">Table 1. Descriptive & Statistical Summary</p>
+                        <p id="tableTitleLabel" class="text-xs font-semibold text-slate-400 mb-2">Table 1. Descriptive Summary</p>
                         <table id="apaTable" class="w-full text-xs text-left border-collapse">
                             <thead>
                                 <tr id="apaHeaderRow" class="border-t border-b border-slate-600 font-bold text-slate-200">
-                                    <th class="py-2 px-3">Group / Variable</th>
+                                    <th class="py-2 px-3">Variable / Group</th>
                                     <th class="py-2 px-3">N</th>
                                     <th class="py-2 px-3">Mean</th>
                                     <th class="py-2 px-3">SD</th>
@@ -214,7 +214,7 @@
 
                 <div>
                     <div class="flex justify-between items-center mb-1">
-                        <label class="font-semibold text-xs text-slate-400">Ready-to-use Academic Report Template for TCC:</label>
+                        <label class="font-semibold text-xs text-slate-400">Academic Report Template for TCC:</label>
                         <button onclick="copyStatReport()" id="copyStatBtn" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-1 rounded text-slate-300 transition">Copy Report Text</button>
                     </div>
                     <p id="statReportText" class="p-4 bg-slate-950 border border-slate-800 rounded-lg font-mono text-xs text-slate-300 leading-relaxed"></p>
@@ -222,7 +222,7 @@
             </div>
         </div>
 
-        <!-- TOOL 3: PDF TRANSLATOR (With PDF Export Support) -->
+        <!-- TOOL 3: PDF TRANSLATOR -->
         <div id="sectionTranslator" class="hidden space-y-6">
             <div class="border-b border-slate-800 pb-4">
                 <h2 class="text-lg font-semibold text-slate-200">Academic PDF Translator</h2>
@@ -260,7 +260,7 @@
             </div>
         </div>
 
-        <!-- TOOL 4: LATEX TABLES -->
+        <!-- TOOL 4: LATEX TABLES (FIXED) -->
         <div id="sectionLatex" class="hidden space-y-6">
             <div class="border-b border-slate-800 pb-4">
                 <h2 class="text-lg font-semibold text-slate-200">R Regression to LaTeX Generator</h2>
@@ -424,9 +424,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
                 else { testKey = pair === 'paired' ? "wilcoxon" : "mann_whitney"; name = pair === 'paired' ? "Teste de Wilcoxon" : "Mann-Whitney (U)"; }
             } else if (obj === 'compare3') {
                 if (norm === 'yes') { testKey = "anova"; name = "ANOVA One-Way"; } else { testKey = "kruskal"; name = "Kruskal-Wallis"; }
-            } else if (obj === 'correlate') {
-                if (norm === 'yes') { testKey = "pearson"; name = "Correlação de Pearson"; } else { testKey = "spearman"; name = "Correlação de Spearman"; }
-            } else { testKey = "regression"; name = "Regressão Linear Simples"; }
+            } else if (obj === 'correlate' || obj === 'regression') {
+                if (obj === 'regression') { testKey = "regression"; name = "Regressão Linear Simples"; }
+                else if (norm === 'yes') { testKey = "pearson"; name = "Correlação de Pearson"; } 
+                else { testKey = "spearman"; name = "Correlação de Spearman"; }
+            }
 
             document.getElementById('recommendedTestName').innerText = name;
             document.getElementById('userSelectedTest').value = testKey;
@@ -441,61 +443,121 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
         function processDatasetAndGenerateOutputs(testKey) {
             const colXIdx = parseInt(document.getElementById('colX').value) || 0;
             const colYIdx = parseInt(document.getElementById('colY').value) || 1;
-            let valuesY = []; let groupsMap = {};
+            
+            const isScatter = (testKey === 'pearson' || testKey === 'spearman' || testKey === 'regression');
+            
+            let tableRowsHtml = '';
+            let chartDatasets = [];
+            let chartLabels = undefined;
+            let nTotal = 0;
 
-            for (let i = 1; i < datasetData.length; i++) {
-                const row = datasetData[i];
-                if (row && row[colYIdx] !== undefined) {
-                    const valY = parseFloat(row[colYIdx]) || 0;
-                    const valX = row[colXIdx] !== undefined ? String(row[colXIdx]) : 'Group 1';
-                    valuesY.push(valY);
-                    if (!groupsMap[valX]) groupsMap[valX] = [];
-                    groupsMap[valX].push(valY);
+            if (isScatter) {
+                // Parse paired numeric data
+                let scatterData = [];
+                let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+                let minX = Infinity, maxX = -Infinity;
+                let valsX = [], valsY = [];
+
+                for (let i = 1; i < datasetData.length; i++) {
+                    const row = datasetData[i];
+                    if (row && row[colXIdx] !== undefined && row[colYIdx] !== undefined) {
+                        let vx = parseFloat(row[colXIdx]);
+                        let vy = parseFloat(row[colYIdx]);
+                        if (!isNaN(vx) && !isNaN(vy)) {
+                            scatterData.push({x: vx, y: vy});
+                            valsX.push(vx); valsY.push(vy);
+                            sumX += vx; sumY += vy; sumXY += vx*vy; sumX2 += vx*vx;
+                            if (vx < minX) minX = vx;
+                            if (vx > maxX) maxX = vx;
+                            nTotal++;
+                        }
+                    }
                 }
+
+                if(nTotal === 0) { alert('No numeric data found for correlation/regression.'); return; }
+
+                // APA Table for Scatter
+                const meanX = sumX / nTotal; const meanY = sumY / nTotal;
+                const sdX = Math.sqrt(valsX.reduce((a,b)=>a+Math.pow(b-meanX,2),0) / (nTotal > 1 ? nTotal-1 : 1));
+                const sdY = Math.sqrt(valsY.reduce((a,b)=>a+Math.pow(b-meanY,2),0) / (nTotal > 1 ? nTotal-1 : 1));
+
+                tableRowsHtml += `<tr class="${isLightMode ? 'border-b border-slate-300' : 'border-b border-slate-700/50'}">
+                        <td class="py-2 px-3 font-medium">Variable X (${datasetData[0][colXIdx] || 'X'})</td><td class="py-2 px-3">${nTotal}</td><td class="py-2 px-3">${meanX.toFixed(2)}</td><td class="py-2 px-3">${sdX.toFixed(2)}</td>
+                    </tr>`;
+                tableRowsHtml += `<tr class="${isLightMode ? 'border-b border-slate-300' : 'border-b border-slate-700/50'}">
+                        <td class="py-2 px-3 font-medium">Variable Y (${datasetData[0][colYIdx] || 'Y'})</td><td class="py-2 px-3">${nTotal}</td><td class="py-2 px-3">${meanY.toFixed(2)}</td><td class="py-2 px-3">${sdY.toFixed(2)}</td>
+                    </tr>`;
+                
+                chartDatasets.push({
+                    type: 'scatter', label: 'Data Points', data: scatterData,
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)', borderColor: 'rgb(59, 130, 246)', borderWidth: 1
+                });
+
+                // Calculate and add Trendline (Linear Regression)
+                if (nTotal > 1) {
+                    let m = (nTotal * sumXY - sumX * sumY) / (nTotal * sumX2 - sumX * sumX);
+                    let b = (sumY - m * sumX) / nTotal;
+                    chartDatasets.push({
+                        type: 'line', label: 'Trendline (Fit)',
+                        data: [{x: minX, y: m * minX + b}, {x: maxX, y: m * maxX + b}],
+                        borderColor: 'rgb(239, 68, 68)', borderWidth: 2, fill: false, pointRadius: 0
+                    });
+                }
+            } else {
+                // Parse Grouped Data
+                let groupsMap = {};
+                for (let i = 1; i < datasetData.length; i++) {
+                    const row = datasetData[i];
+                    if (row && row[colYIdx] !== undefined) {
+                        const valY = parseFloat(row[colYIdx]) || 0;
+                        const valX = row[colXIdx] !== undefined ? String(row[colXIdx]) : 'Group 1';
+                        if (!groupsMap[valX]) groupsMap[valX] = [];
+                        groupsMap[valX].push(valY);
+                        nTotal++;
+                    }
+                }
+
+                let groupNames = Object.keys(groupsMap);
+                chartLabels = groupNames;
+                let chartDataValues = [];
+
+                groupNames.forEach(gName => {
+                    const gVals = groupsMap[gName];
+                    const gN = gVals.length;
+                    const gMean = gN > 0 ? gVals.reduce((a, b) => a + b, 0) / gN : 0;
+                    const gSd = Math.sqrt(gN > 1 ? gVals.reduce((a, b) => a + Math.pow(b - gMean, 2), 0) / (gN - 1) : 0);
+                    chartDataValues.push(gMean);
+                    
+                    tableRowsHtml += `<tr class="${isLightMode ? 'border-b border-slate-300' : 'border-b border-slate-700/50'}">
+                            <td class="py-2 px-3 font-medium">${gName}</td><td class="py-2 px-3">${gN}</td><td class="py-2 px-3">${gMean.toFixed(2)}</td><td class="py-2 px-3">${gSd.toFixed(2)}</td>
+                        </tr>`;
+                });
+
+                chartDatasets.push({
+                    type: 'bar', label: datasetData[0][colYIdx] || 'Values', data: chartDataValues,
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)', borderColor: 'rgb(59, 130, 246)', borderWidth: 1
+                });
             }
 
-            const nTotal = valuesY.length;
-            const meanTotal = nTotal > 0 ? valuesY.reduce((a, b) => a + b, 0) / nTotal : 0;
-            const sdTotal = Math.sqrt(nTotal > 1 ? valuesY.reduce((a, b) => a + Math.pow(b - meanTotal, 2), 0) / (nTotal - 1) : 0);
-
-            let tableRowsHtml = '';
-            let groupNames = Object.keys(groupsMap);
-            groupNames.forEach(gName => {
-                const gVals = groupsMap[gName];
-                const gN = gVals.length;
-                const gMean = gN > 0 ? gVals.reduce((a, b) => a + b, 0) / gN : 0;
-                const gSd = Math.sqrt(gN > 1 ? gVals.reduce((a, b) => a + Math.pow(b - gMean, 2), 0) / (gN - 1) : 0);
-                tableRowsHtml += `<tr class="${isLightMode ? 'border-b border-slate-300' : 'border-b border-slate-700/50'}">
-                        <td class="py-2 px-3 font-medium">${gName}</td><td class="py-2 px-3">${gN}</td><td class="py-2 px-3">${gMean.toFixed(2)}</td><td class="py-2 px-3">${gSd.toFixed(2)}</td>
-                    </tr>`;
-            });
             document.getElementById('apaBodyRows').innerHTML = tableRowsHtml;
 
+            // Render Chart
             const ctx = document.getElementById('statChart').getContext('2d');
             if (activeChart) activeChart.destroy();
-            let chartType = (testKey === 'pearson' || testKey === 'spearman' || testKey === 'regression') ? 'scatter' : 'bar';
             
             activeChart = new Chart(ctx, {
-                type: chartType,
-                data: {
-                    labels: chartType === 'scatter' ? undefined : groupNames,
-                    datasets: [{
-                        label: datasetData[0][colYIdx] || 'Values',
-                        data: chartType === 'scatter' ? valuesY.map((y, idx) => ({x: idx+1, y: y})) : groupNames.map(g => groupsMap[g].reduce((a,b)=>a+b,0)/groupsMap[g].length),
-                        backgroundColor: 'rgba(59, 130, 246, 0.6)', borderColor: 'rgb(59, 130, 246)', borderWidth: 1
-                    }]
-                },
+                data: { labels: chartLabels, datasets: chartDatasets },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { labels: { color: isLightMode ? '#1e293b' : '#94a3b8' } } },
                     scales: {
-                        x: { ticks: { color: isLightMode ? '#1e293b' : '#94a3b8' }, grid: { color: isLightMode ? '#cbd5e1' : '#1e293b' } },
+                        x: { type: isScatter ? 'linear' : 'category', position: 'bottom', ticks: { color: isLightMode ? '#1e293b' : '#94a3b8' }, grid: { color: isLightMode ? '#cbd5e1' : '#1e293b' } },
                         y: { ticks: { color: isLightMode ? '#1e293b' : '#94a3b8' }, grid: { color: isLightMode ? '#cbd5e1' : '#1e293b' } }
                     }
                 }
             });
 
-            document.getElementById('statReportText').innerText = `Análise com N = ${nTotal} (Média geral = ${meanTotal.toFixed(2)}, Desvio Padrão = ${sdTotal.toFixed(2)}). O ${document.getElementById('userSelectedTest').options[document.getElementById('userSelectedTest').selectedIndex].text} foi aplicado aos dados fornecidos.`;
+            document.getElementById('statReportText').innerText = `Análise com N = ${nTotal}. O teste ${document.getElementById('userSelectedTest').options[document.getElementById('userSelectedTest').selectedIndex].text} foi aplicado aos dados extraídos.`;
         }
 
         function toggleOutputTheme() {
@@ -505,6 +567,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
             const table = document.getElementById('apaTable');
             const headerRow = document.getElementById('apaHeaderRow');
             const bodyRows = document.getElementById('apaBodyRows');
+            const chartTitle = document.getElementById('chartTitleLabel');
+            const tableTitle = document.getElementById('tableTitleLabel');
 
             if (isLightMode) {
                 container.className = "space-y-6 bg-white p-6 rounded-xl border border-slate-300 shadow-lg text-slate-900 transition";
@@ -513,6 +577,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
                 table.className = "w-full text-xs text-left border-collapse text-slate-900";
                 headerRow.className = "border-t border-b border-slate-900 font-bold text-slate-900";
                 bodyRows.className = "text-slate-800 border-b border-slate-300";
+                chartTitle.className = "text-xs font-semibold text-slate-800 mb-2";
+                tableTitle.className = "text-xs font-semibold text-slate-800 mb-2";
             } else {
                 container.className = "space-y-6 bg-slate-950 p-4 rounded-xl border border-slate-800 transition";
                 btn.className = "text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded border border-slate-700 transition";
@@ -520,8 +586,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
                 table.className = "w-full text-xs text-left border-collapse";
                 headerRow.className = "border-t border-b border-slate-600 font-bold text-slate-200";
                 bodyRows.className = "text-slate-300 border-b border-slate-600";
+                chartTitle.className = "text-xs font-semibold text-slate-400 mb-2";
+                tableTitle.className = "text-xs font-semibold text-slate-400 mb-2";
             }
-            if (activeChart) updateReportText();
+            if (activeChart) updateReportText(); // redraws chart with correct colors
         }
 
         function copyStatReport() {
@@ -561,26 +629,85 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
         function copyTranslation() { navigator.clipboard.writeText(translatedContent).then(() => alert('Copied!')); }
 
-        // Generate and Download PDF using jsPDF
         function downloadTranslatedPDF() {
             if (!translatedContent) { alert('Translate something first!'); return; }
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            
-            // Add Title
             doc.setFontSize(16);
             doc.text("Translated Academic Document", 10, 10);
-            
-            // Add Text (Auto wrapping)
             doc.setFontSize(11);
             const splitText = doc.splitTextToSize(translatedContent, 180);
             doc.text(splitText, 10, 20);
-            
             doc.save("Translated_Academic_Paper.pdf");
         }
 
-        // LATEX
-        function handleConversion() { /* Kept same logic */ }
+        // LATEX (FIXED: Complete parsing logic restored)
+        function convertRegressionToLatex(rawText) {
+            const lines = rawText.trim().split('\n');
+            let coefficientSection = false;
+            const coefficients = [];
+
+            for (let line of lines) {
+                if (line.includes('Coefficients:')) { 
+                    coefficientSection = true; 
+                    continue; 
+                }
+                if (coefficientSection && line.trim() === '') {
+                    break;
+                }
+                
+                if (coefficientSection && !line.includes('Estimate')) {
+                    const regex = /^([^\s]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.eE+-]+)/;
+                    const match = line.trim().match(regex);
+                    
+                    if (match) {
+                        const [, name, estimate, stdError, tValue, pValue] = match;
+                        let stars = '';
+                        const p = parseFloat(pValue);
+                        if (p < 0.001) stars = '***';
+                        else if (p < 0.01) stars = '**';
+                        else if (p < 0.05) stars = '*';
+
+                        coefficients.push({
+                            name: name.replace(/[_]/g, '\\_'),
+                            estimate: parseFloat(estimate).toFixed(3),
+                            stdError: parseFloat(stdError).toFixed(3),
+                            tValue: parseFloat(tValue).toFixed(3),
+                            pValue: p < 0.001 ? '< 0.001' : p.toFixed(3),
+                            stars: stars
+                        });
+                    }
+                }
+            }
+
+            if (coefficients.length === 0) return "% Error: Could not parse coefficients. Please check input format.";
+
+            let latex = '\\begin{table}[htbp]\n  \\centering\n  \\caption{Regression Analysis Results}\n  \\begin{tabular}{lcccc}\n    \\toprule\n    Variable & Estimate & Std. Error & t value & Pr(>|t|) \\\\\n    \\midrule\n';
+            for (let row of coefficients) {
+                latex += `    ${row.name} & ${row.estimate} & ${row.stdError} & ${row.tValue} & ${row.pValue} ${row.stars} \\\\\n`;
+            }
+            latex += '    \\bottomrule\n  \\end{tabular}\n  \\label{tab:regression_results}\n\\end{table}';
+            return latex;
+        }
+
+        function handleConversion() {
+            const input = document.getElementById('rInput').value;
+            const output = convertRegressionToLatex(input);
+            document.getElementById('latexOutput').innerText = output;
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('latexOutput').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = 'Copied!';
+                setTimeout(() => btn.innerText = 'Copy Code', 2000);
+            });
+        }
+
+        window.onload = function() {
+            handleConversion();
+        };
     </script>
 </body>
 </html>
