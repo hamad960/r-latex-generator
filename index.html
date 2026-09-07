@@ -12,6 +12,8 @@
             darkMode: 'class',
         }
     </script>
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3144572977098137" crossorigin="anonymous"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
 
@@ -59,16 +61,16 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
     </main>
 
-    <!-- SEO / Informational text section (Crucial for ranking on academic search queries) -->
+    <!-- SEO / Informational text section -->
     <section class="max-w-4xl mx-auto w-full px-6 mb-6 text-xs text-slate-400 space-y-2">
         <h2 class="font-semibold text-slate-300">About this Academic Tool</h2>
         <p>Designed for academic researchers, statisticians, and data scientists, this free web utility automates the conversion of R statistical console outputs into clean, publication-grade LaTeX tables using the <code>booktabs</code> package. Simply paste your linear model summary, copy the generated code, and paste it directly into your Overleaf or LaTeX editor.</p>
     </section>
 
-    <!-- Ad Placeholder (For future Google AdSense) -->
+    <!-- Ad Placeholder (Configured for AdSense Auto Ads / Display blocks) -->
     <div class="max-w-4xl mx-auto w-full px-6 mb-6">
         <div id="adText" class="border border-dashed border-slate-800 rounded-lg p-4 text-center text-slate-500 text-xs bg-slate-900/50">
-            Advertisement Space (Ready for Google AdSense)
+            Advertisement Space (Google AdSense Active)
         </div>
     </div>
 
@@ -89,7 +91,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
                 labelStep2: "2. Generated LaTeX Code:",
                 copyBtn: "Copy Code",
                 copied: "Copied!",
-                adText: "Advertisement Space (Ready for Google AdSense)",
+                adText: "Advertisement Space (Google AdSense Active)",
                 footerText: "© 2026 Academic LaTeX Utilities. Built for researchers.",
                 errorParse: "% Error: Could not parse coefficients. Please check your input format.",
                 caption: "Regression Analysis Results"
@@ -103,7 +105,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
                 labelStep2: "2. Código LaTeX Gerado:",
                 copyBtn: "Copiar Código",
                 copied: "Copiado!",
-                adText: "Espaço para Anúncio (Pronto para Google AdSense)",
+                adText: "Espaço para Anúncio (Google AdSense Ativo)",
                 footerText: "© 2026 Academic LaTeX Utilities. Desenvolvido para pesquisadores.",
                 errorParse: "% Erro: Não foi possível interpretar os coeficientes. Verifique o formato de entrada.",
                 caption: "Resultados da Análise de Regressão"
@@ -209,7 +211,6 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
             document.getElementById('latexOutput').innerText = output;
         }
 
-        // Auto-run conversion on load with the default sample text
         window.onload = function() {
             handleConversion();
         };
